@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using StatsDHelper.WebApi.Services;
+using Librato.StatsDHelper.WebApi.Services;
 
-namespace StatsDHelper.WebApi.MessageHandlers
+namespace Librato.StatsDHelper.WebApi.MessageHandlers
 {
     public class InstrumentActionMessageHandler : DelegatingHandler
     {

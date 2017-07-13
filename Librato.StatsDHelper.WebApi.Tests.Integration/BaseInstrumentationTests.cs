@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using FakeItEasy;
+using Librato.StatsDHelper.WebApi.Services;
 using NUnit.Framework;
-using StatsDHelper.WebApi.Services;
 
-namespace StatsDHelper.WebApi.Tests.Integration
+namespace Librato.StatsDHelper.WebApi.Tests.Integration
 {
     abstract class BaseInstrumentationTests
     {
@@ -84,6 +84,6 @@ namespace StatsDHelper.WebApi.Tests.Integration
         {
             _udpClient.Close();
             CancellationTokenSource.Cancel();
-        }        
+        }
     }
 }

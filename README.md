@@ -1,4 +1,4 @@
-# statsd-helper-webapi
+# librato-statsd-helper-webapi
 
 Filter attributes to allow easy metrics gathering based on Response Codes.
 
