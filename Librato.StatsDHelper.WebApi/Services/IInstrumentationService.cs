@@ -6,7 +6,7 @@ namespace Librato.StatsDHelper.WebApi.Services
     internal interface IInstrumentationService
     {
         void TimeRequest(HttpRequestMessage request);
-        void InstrumentResponse(HttpActionExecutedContext httpActionExecutedContext, string template = "{action}");
-        void InstrumentResponse(HttpResponseMessage response, string template = "{action}");
+        void InstrumentResponse(HttpActionExecutedContext httpActionExecutedContext);
+        void InstrumentResponse(HttpResponseMessage response);
     }
 }

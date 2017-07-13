@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text.RegularExpressions;
 using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
@@ -23,7 +24,7 @@ namespace Librato.StatsDHelper.WebApi.Tests.Integration
 
             var result = await ListenForTwoStatsDMessages();
 
-            result.Any(o => o.Contains("ApplicationName.actionname.200:1|c")).Should().BeTrue();
+            result.Any(o => Regex.IsMatch(o, "^ApplicationName.requests#(.*)http_status=200(.*):1|c$")).Should().BeTrue();
         }
 
         private void LatencyHeaderOff()
@@ -45,7 +46,7 @@ namespace Librato.StatsDHelper.WebApi.Tests.Integration
 
             var result = await ListenForTwoStatsDMessages();
 
-            result.Any(o => o.Contains("ApplicationName.actionname.latency:") && o.EndsWith("|ms")).Should().BeTrue();
+            result.Any(o => Regex.IsMatch(o, "^ApplicationName.requests.latency#(.*):(\\d+)|ms$")).Should().BeTrue();
         }
 
         [Test]
@@ -59,20 +60,22 @@ namespace Librato.StatsDHelper.WebApi.Tests.Integration
 
             var result = await ListenForTwoStatsDMessages();
 
-            result.First().Should().Contain("ApplicationName.actionname.200:1|c");
+            result.Any(o => Regex.IsMatch(o, "^ApplicationName.requests#(.*)action=actionname(.*):1|c$")).Should().BeTrue();
         }
 
 
         [Test]
-        public async void when_include_controller_name_is_enabled_then_the_metric_should_include_the_controller_name()
+        public async void when_controller_name_is_mixed_case_then_it_will_be_changed_to_lowercase_for_the_metric_name()
         {
             LatencyHeaderOff();
 
-            InstrumentationService.InstrumentResponse(HttpActionExecutedContext, template: "{controller}.{action}");
+            FakeActionDescriptor.ControllerName = "CoNtRoLlErNaMe";
+
+            InstrumentationService.InstrumentResponse(HttpActionExecutedContext);
 
             var result = await ListenForTwoStatsDMessages();
 
-            result.First().Should().Contain("ApplicationName.controllername.actionname.200:1|c");
+            result.Any(o => Regex.IsMatch(o, "^ApplicationName.requests#(.*)controller=controllername(.*):1|c$")).Should().BeTrue();
         }
 
         [Test]
@@ -80,7 +83,7 @@ namespace Librato.StatsDHelper.WebApi.Tests.Integration
         {
             LatencyHeaderOn();
 
-            InstrumentationService.InstrumentResponse(HttpActionExecutedContext, template: "{controller}.{action}");
+            InstrumentationService.InstrumentResponse(HttpActionExecutedContext);
 
             HttpActionExecutedContext.Response.Headers.Any(o => o.Key.Contains("X-ExecutionTime")).Should().BeTrue();
         }
@@ -90,7 +93,7 @@ namespace Librato.StatsDHelper.WebApi.Tests.Integration
         {
             LatencyHeaderOff();
 
-            InstrumentationService.InstrumentResponse(HttpActionExecutedContext, template: "{controller}.{action}");
+            InstrumentationService.InstrumentResponse(HttpActionExecutedContext);
 
             HttpActionExecutedContext.Response.Headers.Any(o => o.Key.Contains("X-ExecutionTime")).Should().BeFalse();
         }

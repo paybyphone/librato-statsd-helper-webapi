@@ -11,9 +11,10 @@ namespace Librato.StatsDHelper.WebApi.Tests.Integration
     public class FakeActionDescriptor : HttpActionDescriptor
     {
         private string _actionName = "ActionName";
+        public static string ControllerName = "ControllerName";
 
         public FakeActionDescriptor()
-            : base(new HttpControllerDescriptor(new HttpConfiguration(), "ControllerName", typeof(object)))
+            : base(new HttpControllerDescriptor(new HttpConfiguration(), ControllerName, typeof(object)))
         {
         }
 
