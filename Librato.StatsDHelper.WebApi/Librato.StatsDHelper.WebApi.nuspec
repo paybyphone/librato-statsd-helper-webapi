@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0"?>
 <package >
   <metadata>
-    <id>statsd-helper-webapi</id>
+    <id>librato-statsd-helper-webapi</id>
     <version>$version$</version>
     <authors>PayByPhone</authors>
     <owners>PayByPhone</owners>
-    <projectUrl>https://github.com/paybyphone/statsd-helper-webapi</projectUrl>
+    <projectUrl>https://github.com/paybyphone/librato-statsd-helper-webapi</projectUrl>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Filters to make instrumenting status code responses to StatsD easier when using the StatsDHelper.</description>
+    <description>Filters to make instrumenting status code responses to StatsD easier when using the StatsDHelper. This library utilises Librato's tagging features.</description>
     <releaseNotes>Initial Release</releaseNotes>
-    <copyright>Copyright 2015</copyright>
-    <tags>statsd statsd-csharp-client webapi</tags>
+    <copyright>Copyright 2017</copyright>
+    <tags>statsd statsd-csharp-client webapi librato</tags>
     <dependencies>
       <dependency id="statsd-helper" version="[0.0.28,)"/>
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\StatsDHelper.WebApi.dll" target="lib\net45\StatsDHelper.WebApi.dll" />
+    <file src="bin\Release\Librato.StatsDHelper.WebApi.dll" target="lib\net45\Librato.StatsDHelper.WebApi.dll" />
   </files>
 </package>
