@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 
-namespace StatsDHelper.WebApi.Tests.Integration
+namespace Librato.StatsDHelper.WebApi.Tests.Integration
 {
     public class FakeActionDescriptor : HttpActionDescriptor
     {
