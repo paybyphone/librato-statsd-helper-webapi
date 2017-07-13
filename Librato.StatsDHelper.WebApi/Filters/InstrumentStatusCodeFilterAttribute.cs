@@ -8,18 +8,11 @@ namespace Librato.StatsDHelper.WebApi.Filters
 {
     public class InstrumentStatusCodeFilterAttribute : ActionFilterAttribute
     {
-        private readonly string _template;
         private readonly IInstrumentationService _instrumentationService;
 
-        public InstrumentStatusCodeFilterAttribute(string template = "{action}")
+        public InstrumentStatusCodeFilterAttribute()
         {
-            _template = template;
             _instrumentationService = new InstrumentationService();
-        }
-
-        internal InstrumentStatusCodeFilterAttribute(string thing, string template = "{action}")
-        {
-            
         }
 
         public override void OnActionExecuting(HttpActionContext actionContext)
@@ -31,7 +24,7 @@ namespace Librato.StatsDHelper.WebApi.Filters
 
         public override Task OnActionExecutedAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
         {
-            _instrumentationService.InstrumentResponse(actionExecutedContext, _template);
+            _instrumentationService.InstrumentResponse(actionExecutedContext);
 
             return base.OnActionExecutedAsync(actionExecutedContext, cancellationToken);
         }

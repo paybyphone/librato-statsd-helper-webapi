@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Filters;
@@ -33,7 +34,27 @@ namespace Librato.StatsDHelper.WebApi.Tests.Integration
 
             var result = await ListenForTwoStatsDMessages();
 
-            result.Any(o => o.Contains("ApplicationName.actionname.200:1|c")).Should().BeTrue();
+            result.Any(o => Regex.IsMatch(o, "^ApplicationName.requests#(.*)http_status=200(.*):1|c$")).Should().BeTrue();
+        }
+
+        [Test]
+        public async void when_instrumenting_action_name_should_be_sent()
+        {
+            await _handler.Run(HttpActionExecutedContext.Request);
+
+            var result = await ListenForTwoStatsDMessages();
+
+            result.Any(o => Regex.IsMatch(o, "^ApplicationName.requests#(.*)action=actionname(.*):1|c$")).Should().BeTrue();
+        }
+
+        [Test]
+        public async void when_instrumenting_controller_name_should_be_sent()
+        {
+            await _handler.Run(HttpActionExecutedContext.Request);
+
+            var result = await ListenForTwoStatsDMessages();
+
+            result.Any(o => Regex.IsMatch(o, "^ApplicationName.requests#(.*)controller=controllername(.*):1|c$")).Should().BeTrue();
         }
 
         [Test]
@@ -43,22 +64,7 @@ namespace Librato.StatsDHelper.WebApi.Tests.Integration
 
             var result = await ListenForTwoStatsDMessages();
 
-            result.Any(o => o.Contains("ApplicationName.actionname.latency:") && o.EndsWith("|ms")).Should().BeTrue();
-        }
-
-        [Test]
-        public async void when_template_includes_controller_name_then_the_metric_should_include_the_controller_name()
-        {
-            _handler.InnerHandler = new InstrumentActionMessageHandler("{controller}.{action}")
-            {
-                InnerHandler = new FakeHandler(HttpActionExecutedContext)
-            };
-
-            await _handler.Run(HttpActionExecutedContext.Request);
-
-            var result = await ListenForTwoStatsDMessages();
-
-            result.First().Should().Contain("ApplicationName.controllername.actionname.200:1|c");
+            result.Any(o => Regex.IsMatch(o, "^ApplicationName.requests.latency#(.*):(\\d+)|ms$")).Should().BeTrue();
         }
 
         private class HandlerAccessor : DelegatingHandler

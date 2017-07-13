@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
@@ -36,36 +37,31 @@ namespace Librato.StatsDHelper.WebApi.Services
             requestStopwatch.Start();
         }
 
-        public void InstrumentResponse(HttpActionExecutedContext httpActionExecutedContext, string template = "{action}")
+        public void InstrumentResponse(HttpActionExecutedContext httpActionExecutedContext)
         {
-            InstrumentResponse(httpActionExecutedContext.Response, template);
+            InstrumentResponse(httpActionExecutedContext.Response);
         }
 
-        public void InstrumentResponse(HttpResponseMessage response, string template = "{action}")
+        public void InstrumentResponse(HttpResponseMessage response)
         {
             if (response != null && response.RequestMessage != null)
             {
                 var actionDescriptor = response.RequestMessage.GetActionDescriptor();
                 if (actionDescriptor != null)
                 {
-                    var metricName = template;
+                    var tags = _templateRegistry.Select(t => new KeyValuePair<string, string>(t.Key, t.Value(actionDescriptor).ToString().ToLowerInvariant())).ToList();
+                    tags.Add(new KeyValuePair<string, string>("http_status", ((int)response.StatusCode).ToString()));
 
-                    foreach (string templatedValue in _templateRegistry.Keys)
-                    {
-                        var resolver = _templateRegistry[templatedValue];
-                        var value = resolver(actionDescriptor);
+                    var formattedTags = string.Join(",", tags.Select(t => t.Key + "=" + t.Value));
 
-                        metricName = metricName.Replace("{" + templatedValue + "}", value.ToString().ToLowerInvariant());
-                    }
-
-                    _statsDHelper.LogCount(string.Format("{0}.{1}", metricName, (int) response.StatusCode));
+                    _statsDHelper.LogCount(string.Format("requests#{0}", formattedTags));
 
                     var requestStopwatch = response.RequestMessage.Properties[Constants.StopwatchKey] as Stopwatch;
 
                     if (requestStopwatch != null)
                     {
                         requestStopwatch.Stop();
-                        _statsDHelper.LogTiming(string.Format("{0}.latency", metricName),
+                        _statsDHelper.LogTiming(string.Format("requests.latency#{0}", formattedTags),
                             (long) requestStopwatch.Elapsed.TotalMilliseconds);
 
                         if (_appSettings.GetBoolean(Constants.Configuration.LatencyHeaderEnabled))
