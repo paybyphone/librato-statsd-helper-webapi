@@ -1,6 +1,6 @@
 # librato-statsd-helper-webapi
 
-[![NuGet](https://img.shields.io/nuget/v/librato-statsd-helper-webapi.svg)]()
+[![NuGet](https://img.shields.io/nuget/v/librato-statsd-helper-webapi.svg)](https://www.nuget.org/packages/librato-statsd-helper-webapi/)
 
 Filter attributes to allow easy metrics gathering based on Response Codes.
 
