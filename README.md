@@ -1,5 +1,7 @@
 # librato-statsd-helper-webapi
 
+[![NuGet](https://img.shields.io/nuget/v/librato-statsd-helper-webapi.svg)]()
+
 Filter attributes to allow easy metrics gathering based on Response Codes.
 
 See https://github.com/paybyphone/statsd-helper configuring the statsd-helper itself.
@@ -23,6 +25,11 @@ This is configurable by using the `StatsD.WebApi.Response.LatencyHeader.Enabled`
 ```xml
 <add key="StatsD.WebApi.Response.LatencyHeader.Enabled" value="true" />
 ```
+
+## Librato Tags
+
+`librato-statsd-helper-webapi` makes use of Librato's tagged-metric features and will send the additional metadata as tagged values along with the base metric. If you do not have
+a Librato account which has tagged-metrics enabled, or are forwarding to a different system or integration, then you should use the non-librato specific https://github.com/paybyphone/statsd-helper-webapi.
 
 ## Usage
 
@@ -60,8 +67,3 @@ If you want to instrument only specific actions, then the `InstrumentStatusCodeF
         }
     }
 ```
-
-## Librato Tags
-
-`librato-statsd-helper-webapi` makes use of Librato's tagged-metric features and will send the additional metadata as tagged values along with the base metric. If you do not have
-a Librato account which has tagged-metrics enabled, or are forwarding to a different system or integration, then you should use the non-librato specific `statsd-helper-webapi` or `statsd-helper`.
