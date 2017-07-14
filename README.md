@@ -61,7 +61,7 @@ If you want to instrument only specific actions, then the `InstrumentStatusCodeF
 ```csharp
     public class ApiController
     {
-		[InstrumentStatusCodeFilter]
+        [InstrumentStatusCodeFilter]
         public void ApiAction()
         {
         }
