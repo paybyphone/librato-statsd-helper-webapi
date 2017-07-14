@@ -8,7 +8,7 @@
     <projectUrl>https://github.com/paybyphone/librato-statsd-helper-webapi</projectUrl>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Filters to make instrumenting status code responses to StatsD easier when using the StatsDHelper. This library utilises Librato's tagging features.</description>
+    <description>Filter/attribute for measuring counts, timings, status codes etc. for WebAPI services. This package utilises Librato's tagged-metrics. For use with non-Librato destinations, see statsd-helper-webapi.</description>
     <releaseNotes>Initial Release</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>statsd statsd-csharp-client webapi librato</tags>
